@@ -3,7 +3,10 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
-        <entry key="..\:/programlama/Kotlin_Projeleri/MyTravelBook/app/src/main/res/layout/activity_maps.xml" value="0.20052083333333334" />
+        <entry key="..\:/programlama/Kotlin_Projeleri/MyTravelBook/app/src/main/res/layout/activity_main.xml" value="0.36666666666666664" />
+        <entry key="..\:/programlama/Kotlin_Projeleri/MyTravelBook/app/src/main/res/layout/activity_maps.xml" value="0.4" />
+        <entry key="..\:/programlama/Kotlin_Projeleri/MyTravelBook/app/src/main/res/layout/recycler_row.xml" value="0.36666666666666664" />
+        <entry key="..\:/programlama/Kotlin_Projeleri/MyTravelBook/app/src/main/res/menu/place_menu.xml" value="0.36666666666666664" />
       </map>
     </option>
   </component>
