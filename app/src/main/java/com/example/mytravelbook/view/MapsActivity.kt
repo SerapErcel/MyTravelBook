@@ -189,7 +189,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLon
     }
 
     private fun handleResponse() {
-        val intent = Intent(this, MapsActivity::class.java)
+        val intent = Intent(this, MainActivity::class.java)
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
         startActivity(intent)
     }
