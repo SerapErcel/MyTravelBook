@@ -1,4 +1,4 @@
-package com.example.mytravelbook
+package com.example.mytravelbook.view
 
 import android.Manifest
 import android.annotation.SuppressLint
@@ -15,11 +15,16 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.room.Room
+import com.example.mytravelbook.R
 
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.example.mytravelbook.databinding.ActivityMapsBinding
+import com.example.mytravelbook.model.Place
+import com.example.mytravelbook.roomdb.PlaceDao
+import com.example.mytravelbook.roomdb.PlaceDatabase
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
@@ -36,6 +41,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLon
     private var trackBoolean: Boolean? = null
     private var selectedLatitude: Double? = null
     private var selectedLongitude: Double? = null
+    private lateinit var db: PlaceDatabase
+    private lateinit var placeDao: PlaceDao
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,6 +60,9 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLon
         trackBoolean = false
         selectedLatitude = 0.0
         selectedLongitude = 0.0
+
+        db = Room.databaseBuilder(applicationContext,PlaceDatabase::class.java,"Places").build()
+        placeDao=db.placeDao()
     }
 
     @SuppressLint("MissingPermission")
@@ -160,10 +170,15 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLon
         selectedLatitude = p0.latitude
     }
 
-    fun save(view: View){
+    fun save(view: View) {
+        val place =
+            Place(binding.placeText.text.toString(), selectedLatitude!!, selectedLongitude!!)
+        placeDao.insert(place)
+
 
     }
-    fun delete(view: View){
+
+    fun delete(view: View) {
 
     }
 }
