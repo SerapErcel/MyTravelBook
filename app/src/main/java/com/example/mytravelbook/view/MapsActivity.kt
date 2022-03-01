@@ -2,6 +2,7 @@ package com.example.mytravelbook.view
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.location.Location
@@ -29,6 +30,9 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.material.snackbar.Snackbar
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.disposables.CompositeDisposable
+import io.reactivex.rxjava3.schedulers.Schedulers
 
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLongClickListener {
 
@@ -43,6 +47,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLon
     private var selectedLongitude: Double? = null
     private lateinit var db: PlaceDatabase
     private lateinit var placeDao: PlaceDao
+    val compositeDisposable = CompositeDisposable()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -61,8 +66,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLon
         selectedLatitude = 0.0
         selectedLongitude = 0.0
 
-        db = Room.databaseBuilder(applicationContext,PlaceDatabase::class.java,"Places").build()
-        placeDao=db.placeDao()
+        db = Room.databaseBuilder(applicationContext, PlaceDatabase::class.java, "Places").build()
+        placeDao = db.placeDao()
     }
 
     @SuppressLint("MissingPermission")
@@ -173,12 +178,28 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLon
     fun save(view: View) {
         val place =
             Place(binding.placeText.text.toString(), selectedLatitude!!, selectedLongitude!!)
-        placeDao.insert(place)
+        compositeDisposable.add(
+            placeDao.insert(place)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(this::handleResponse)
+        )
 
 
     }
 
+    private fun handleResponse() {
+        val intent = Intent(this, MapsActivity::class.java)
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+        startActivity(intent)
+    }
+
     fun delete(view: View) {
 
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        compositeDisposable.clear()
     }
 }
