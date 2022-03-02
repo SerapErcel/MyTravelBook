@@ -23,6 +23,8 @@ class PlaceAdapter(val placeList: List<Place>) : RecyclerView.Adapter<PlaceAdapt
         holder.recyclerRowBinding.recyclerViewTextView.text = placeList.get(position).name
         holder.itemView.setOnClickListener {
             val intent = Intent(holder.itemView.context, MapsActivity::class.java)
+            intent.putExtra("selectedPlace",placeList.get(position))
+            intent.putExtra("info","old")
             holder.itemView.context.startActivity(intent)
         }
     }
